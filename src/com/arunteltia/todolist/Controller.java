@@ -4,6 +4,7 @@ import com.arunteltia.todolist.DataModel.ToDoData;
 import com.arunteltia.todolist.DataModel.TodoItem;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class Controller {
 
@@ -42,11 +44,18 @@ public class Controller {
     @FXML
     private  ContextMenu listContextMenu;
 
+    @FXML
+    private ToggleButton filterTogglebutton;
+
+    private FilteredList<TodoItem> filteredList;
+
+    private Predicate<TodoItem> wantAllItem;
+    private Predicate<TodoItem> wantTodaysItem;
     public void initialize() {
 //        TodoItem item1 = new TodoItem("Mail birthday card", "Buy a 30th birthday card for John",
 //                LocalDate.of(2016, Month.APRIL, 25));
 //        TodoItem item2 = new TodoItem("Doctor's Appointment", "See Dr. Smith at 123 Main Street.  Bring paperwork",
-//                LocalDate.of(2016, Month.MAY, 23));
+//                LocalDate.of(2016, Month.MAY,  23));
 //        TodoItem item3 = new TodoItem("Finish design proposal for client", "I promised Mike I'd email website mockups by Friday 22nd April",
 //                LocalDate.of(2016, Month.APRIL, 22));
 //        TodoItem item4 = new TodoItem("Pickup Doug at the train station", "Doug's arriving on March 23 on the 5:00 train",
@@ -84,8 +93,23 @@ public class Controller {
                 }
             }
         });
+        wantAllItem=new Predicate<TodoItem>() {
+            @Override
+            public boolean test(TodoItem todoItem) {
+                return true;
+            }
+        };
+        wantTodaysItem=new Predicate<TodoItem>() {
+            @Override
+            public boolean test(TodoItem todoItem) {
+                return todoItem.getDeadline().equals(LocalDate.now());
+            }
+        };
 
-        SortedList<TodoItem> sortedList= new SortedList<TodoItem>(ToDoData.getInstance().getTodoItems(), new Comparator<TodoItem>() {
+
+        filteredList = new FilteredList<TodoItem>(ToDoData.getInstance().getTodoItems(),wantTodaysItem);
+
+        SortedList<TodoItem> sortedList= new SortedList<TodoItem>(filteredList, new Comparator<TodoItem>() {
             @Override
             public int compare(TodoItem o1, TodoItem o2) {
                 return o1.getDeadline().compareTo(o2.getDeadline());
@@ -193,6 +217,26 @@ public class Controller {
         Optional<ButtonType> result = alert.showAndWait();
         if(result.isPresent()&&(result.get()==ButtonType.OK)){
             ToDoData.getInstance().deleteTodoItem(item);
+        }
+    }
+
+    public void handleFilterButton(){
+        TodoItem selectedItem = todoListView.getSelectionModel().getSelectedItem();
+
+        if(filterTogglebutton.isSelected()){
+            filteredList.setPredicate(wantTodaysItem);
+            if(filteredList.isEmpty()){
+                itemDetailsTextArea.clear();
+                deadlineLabel.setText("");
+            }else if(filteredList.contains(selectedItem)){
+                todoListView.getSelectionModel().select(selectedItem);
+            }else{
+                todoListView.getSelectionModel().selectFirst();
+            }
+
+        }else{
+            filteredList.setPredicate(wantAllItem);
+            todoListView.getSelectionModel().select(selectedItem);
         }
     }
 }
