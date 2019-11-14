@@ -17,6 +17,7 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.control.Tooltip?>
 <BorderPane fx:id="mainBorderPane" fx:controller="com.arunteltia.todolist.Controller"
             xmlns:fx="http://javafx.com/fxml" >
     <top>
@@ -32,7 +33,10 @@
         </MenuBar>
             <ToolBar>
                 <HBox>
-                    <Button text="New..." onAction="#showNewItemDisplay">
+                    <Button  onAction="#showNewItemDisplay" >
+                        <tooltip>
+                            <Tooltip text="Add a new TodoItem"/>
+                        </tooltip>
                         <graphic>
                             <ImageView>
                                 <Image url="@/toolbarButtonGraphics/general/New24.gif"></Image>
