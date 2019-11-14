@@ -14,27 +14,45 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane fx:id="mainBorderPane" fx:controller="com.arunteltia.todolist.Controller"
             xmlns:fx="http://javafx.com/fxml" >
     <top>
-        <MenuBar>
+        <VBox>
+            <MenuBar>
             <Menu text="file">
-                <items>
+                 <items>
                     <MenuItem  text ="New..." onAction="#showNewItemDisplay"></MenuItem>
                     <SeparatorMenuItem/>
                     <MenuItem text="Exit"></MenuItem>
                 </items>
             </Menu>
         </MenuBar>
+            <ToolBar>
+                <HBox>
+                    <Button text="New..." onAction="#showNewItemDisplay">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@/toolbarButtonGraphics/general/New24.gif"></Image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </HBox>
+            </ToolBar>
+        </VBox>
+
+
     </top>
     <left>
-        <ListView fx:id="todoListView" >
+        <ListView fx:id="todoListView" onKeyPressed="#handleKeyPressed" >
 
         </ListView>
     </left>
     <center>
         <VBox style="-fx-background-color: white">
-            <TextArea fx:id="itemDetailsTextArea" VBox.vgrow="ALWAYS"/>
+            <TextArea fx:id="itemDetailsTextArea" wrapText="true" VBox.vgrow="ALWAYS"/>
             <HBox>
                 <Label text="Due: " style="-fx-background-color: white">
                     <font>
