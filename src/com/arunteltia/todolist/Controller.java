@@ -22,12 +22,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 public class Controller {
 
-//    private List<TodoItem> todoItems ;
+    private List<TodoItem> todoItems ;
 
     @FXML
     private ListView<TodoItem> todoListView;
@@ -45,13 +46,9 @@ public class Controller {
     private  ContextMenu listContextMenu;
 
     @FXML
-    private ToggleButton filterTogglebutton;
+    private ToggleButton filterToggleButton;
 
     private FilteredList<TodoItem> filteredList;
-
-
-
-
     private Predicate<TodoItem> wantAllItems;
     private Predicate<TodoItem> wantTodaysItems;
     public void initialize() {
@@ -93,9 +90,9 @@ public class Controller {
             }
         };
 
-        filteredList = new FilteredList<TodoItem>(ToDoData.getInstance().getTodoItems(), wantAllItems);
+        filteredList = new FilteredList<>(ToDoData.getInstance().getTodoItems(), wantAllItems);
 
-        SortedList<TodoItem> sortedList = new SortedList<TodoItem>(filteredList, new Comparator<TodoItem>() {
+        SortedList<TodoItem> sortedList = new SortedList<>(filteredList, new Comparator<TodoItem>() {
                     @Override
                     public int compare(TodoItem o1, TodoItem o2) {
                         return o1.getDeadline().compareTo(o2.getDeadline());
@@ -191,20 +188,21 @@ public class Controller {
     @FXML
     public void handleFilterButton(){
         TodoItem selectedItem = todoListView.getSelectionModel().getSelectedItem();
-        if(filterTogglebutton.isSelected()){
+        if(filterToggleButton.isSelected()) {
             filteredList.setPredicate(wantTodaysItems);
-            if(filteredList.isEmpty()){
+            if(filteredList.isEmpty()) {
                 itemDetailsTextArea.clear();
                 deadlineLabel.setText("");
-            }else if(filteredList.contains(selectedItem)) {
+            } else if(filteredList.contains(selectedItem)) {
                 todoListView.getSelectionModel().select(selectedItem);
-            }else {
+            } else {
                 todoListView.getSelectionModel().selectFirst();
             }
-        }else {
+        } else {
             filteredList.setPredicate(wantAllItems);
             todoListView.getSelectionModel().select(selectedItem);
         }
+
     }
     public void handleExit(){
         Platform.exit();
