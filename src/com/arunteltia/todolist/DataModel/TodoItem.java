@@ -38,10 +38,10 @@ public class TodoItem {
         this.deadline = deadline;
     }
 
-//    @Override
-//    public String toString() {
-//        return shortDiscription;
-//    }
+    @Override
+    public String toString() {
+        return shortDiscription;
+    }
 // we have created a custom factory which is converting the reference to the string and we dont need this now
 
 }

@@ -41,7 +41,6 @@ public class ToDoData {
         todoItems= FXCollections.observableArrayList();
         Path path = Paths.get(filename);
         BufferedReader br = Files.newBufferedReader(path);
-
         String input;
         try{
             while((input = br.readLine())!=null){
@@ -60,7 +59,6 @@ public class ToDoData {
                 br.close();
             }
         }
-
     }
     public void storeTodoItems() throws IOException{
         Path path = Paths.get(filename);
@@ -83,10 +81,4 @@ public class ToDoData {
     public void deleteTodoItem(TodoItem item){
         todoItems.remove(item);
     }
-
-
-
-
-
-
 }
